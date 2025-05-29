@@ -141,14 +141,14 @@ const Dashboard = () => {
         {loading && <p>Loading data...</p>}
         {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-        <DataTable data={allTableData} />
         {!loading && !error !== '--Select Parameter--' && (
           <>
-          <PowerChart data={allTableData} />
+          <PowerChart data={allTableData} selectedParameter={filters.parameter} />
             {/* <PowerChart data={filteredChartData} parameter={filters.parameter} /> */}
             {/* <DataTable data={filteredTableData} parameter={filters.parameter} /> */}
           </>
         )}
+        <DataTable data={allTableData} />
       </main>
     </div>
   );
