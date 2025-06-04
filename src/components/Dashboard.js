@@ -210,7 +210,10 @@ import Sidebar from './Sidebar';
 import Filters from './FilterPanel';
 import PowerChart from './PowerChart';
 import DataTable from './DataTable';
+import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
+
 import DatePickerComponent from './DatePickerComponent';
 import FormComponent from './FormComponent'; // Import your form
 
@@ -223,6 +226,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
   const [currentIstDate, setCurrentIstDate] = useState(new Date());
+const navigate = useNavigate();
 
   const now = new Date();
   const formattedDate = now.toLocaleDateString(undefined, {
@@ -399,20 +403,23 @@ const Dashboard = () => {
   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
     {/* Uncomment based on login status */}
     
-    {/* 🔒 When Logged OUT */}
+    
+    
     <button
+      onClick={() => navigate('/login')}
       style={{
-        background: 'transparent',
-        border: '1px solid #4b0082',
-        borderRadius: '6px',
-        padding: '8px 16px',
-        fontSize: '14px',
-        color: '#4b0082',
-        cursor: 'pointer',
-      }}
-    >
-      Login
-    </button>
+      background: 'transparent',
+      border: '1px solid #4b0082',
+      borderRadius: '6px',
+      padding: '8px 16px',
+      fontSize: '14px',
+      color: '#4b0082',
+      cursor: 'pointer',
+  }}
+>
+  Login
+</button>
+
     <button
       style={{
         background: '#4b0082',

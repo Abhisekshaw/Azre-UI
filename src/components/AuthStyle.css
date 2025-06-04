@@ -1,0 +1,45 @@
+/* src/components/AuthStyle.css */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('https://png.pngtree.com/thumb_back/fh260/background/20230715/pngtree-d-rendering-of-iot-devices-and-network-connections-in-the-internet-image_3885214.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.auth-form {
+  background: white;
+  padding: 2rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 300px;
+}
+
+.auth-form h2 {
+  margin-bottom: 1rem;
+ text-align: center;
+}
+
+.auth-form input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  
+}
+
+.auth-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: green;
+  color: white;
+  border: none;
+  margin-top: 10px;
+}
+
+.link {
+  color: blue;
+  cursor: pointer;
+  text-align: left;
+  margin-top: 10px;
+}
