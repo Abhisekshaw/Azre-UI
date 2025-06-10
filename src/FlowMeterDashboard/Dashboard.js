@@ -33,31 +33,17 @@ const Dashboard = () => {
     setDateRange(range);
   };
 
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
-      const formattedDate = now.toLocaleDateString('en-IN', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-      const greeting = hours < 12 ? 'Good Morning' : hours < 17 ? 'Good Afternoon' : 'Good Evening';
-
-      setCurrentDateTime({
-        date: formattedDate,
-        time: formattedTime,
-        greeting
-      });
-    };
-
-    updateDateTime();
-    const intervalId = setInterval(updateDateTime, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
+  const formattedDate = now.toLocaleDateString('en-IN', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const greeting = hours < 12 ? 'Hi, Good Morning' : hours < 17 ? 'Hi, Good Afternoon' : 'Hi, Good Evening';
 
   useEffect(() => {
     const fetchGatewayData = async () => {
@@ -138,7 +124,7 @@ const Dashboard = () => {
               lineHeight: '1.5'
             }}
           >
-            {currentDateTime.greeting}
+            {greeting}
           </div>
           <div
             style={{
@@ -150,9 +136,9 @@ const Dashboard = () => {
               textAlign: 'right'
             }}
           >
-            {currentDateTime.date}
+            {formattedDate}
             <br />
-            {currentDateTime.time}
+            {formattedTime}
           </div>
         </div>
 

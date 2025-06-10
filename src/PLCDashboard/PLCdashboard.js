@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Sidebar from "../Common/Sidebar";
 import { useNavigate } from "react-router-dom";
 import PlcParameter from "../PLCDashboard/PlcParameter"; // 
 import SensorDataTable from "../Common/SensorDataTable";
 import DynamicLineChart from '../Common/DynamicLineChart';
 import axios from "axios";
-
 import DatePickerComponent from "../Common/DatePickerComponent";
 import FormComponent from "../Common/FormComponent";
 
@@ -24,7 +23,7 @@ const PLCdashboard = () => {
   const [currentIstDate, setCurrentIstDate] = useState(new Date());
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
 
   const now = new Date();
   const formattedDate = now.toLocaleDateString(undefined, {
@@ -39,29 +38,16 @@ const PLCdashboard = () => {
     hour12: true,
   });
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = useCallback((e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
+  }, []);
 
-  const handleDateChange = (range) => {
+  const handleDateChange = useCallback((range) => {
     setDateRange(range);
-  };
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-      const istOffset = 5.5 * 60 * 60000;
-      setCurrentIstDate(new Date(utc + istOffset));
-    };
-
-    updateTime();
-    const intervalId = setInterval(updateTime, 1000);
-    return () => clearInterval(intervalId);
   }, []);
 
   const hour = currentIstDate.getHours();
-  let greeting = "Hi PLC, Good Evening";
+  let greeting = "Hi, Good Evening";
   if (hour >= 5 && hour < 12) greeting = "Hi PLC, Good Morning";
   else if (hour >= 12 && hour < 17) greeting = "Hi PLC, Good Afternoon";
 
@@ -97,7 +83,7 @@ const PLCdashboard = () => {
       <Sidebar />
       <main>
         {/* Top bar and greeting */}
-       <div className="top-bar">
+        <div className="top-bar">
           <input type="text" placeholder="Search using keywords or name..." />
           <div
             className="user"
@@ -143,9 +129,9 @@ const PLCdashboard = () => {
         {error && <p style={{ color: "red" }}>Error: {error}</p>}
         {!loading && !error && (
           <>
-          <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="plc" />
+            <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="plc" />
           </>
-          
+
         )}
         <SensorDataTable data={{ data: allTableData }} type="plc" />
         {/* Add Device Form */}

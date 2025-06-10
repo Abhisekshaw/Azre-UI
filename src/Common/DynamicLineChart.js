@@ -10,8 +10,6 @@ import {
 } from 'recharts';
 
 const DynamicLineChart = ({ data, selectedParameter, sourceType }) => {
-  console.log(data.data,"------");
-  console.log(sourceType,"---************---");
   if (!selectedParameter) {
     return (
       <p style={{ textAlign: 'center', marginTop: '1rem' }}>

@@ -18,7 +18,6 @@ const  PlcParameter= ({ filters, onChange }) => {
   };
 
   const handleChange = (e) => {
-    console.log(e,"#############")
     onChange(e);
   };
 
