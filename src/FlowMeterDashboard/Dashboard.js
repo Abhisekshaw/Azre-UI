@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../Common/Sidebar';
 import Filters from '../FlowMeterDashboard/FilterPanel';
-import PowerChart from '../FlowMeterDashboard/PowerChart';
-import DataTable from '../FlowMeterDashboard/DataTable';
+// import PowerChart from '../FlowMeterDashboard/PowerChart';
+// import DataTable from '../FlowMeterDashboard/DataTable';
 import DatePickerComponent from '../Common/DatePickerComponent';
 import FormComponent from '../Common/FormComponent';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import SensorDataTable from "../Common/SensorDataTable";
+import DynamicLineChart from '../Common/DynamicLineChart';
 const Dashboard = () => {
   const [filters, setFilters] = useState({ time: '', device: '', parameter: '' });
   const [allChartData, setAllChartData] = useState([]);
@@ -183,11 +184,8 @@ const Dashboard = () => {
         {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
         {/* Chart */}
-        {!loading && !error && <PowerChart data={allTableData} selectedParameter={filters.parameter} />}
-
-        {/* Table */}
-        <DataTable data={allTableData} />
-
+        <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="flow" />
+        <SensorDataTable data={{ data: allTableData }} type="flow" />    
         {/* Add Device Form */}
         {showAddDeviceForm && (
           <div

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Common/Sidebar";
-import PlcPowerChart from "../PLCDashboard/PlcPowerChart"; // 
-import PlcDataTable from "../PLCDashboard/PlcDataTable";   // 
 import { useNavigate } from "react-router-dom";
 import PlcParameter from "../PLCDashboard/PlcParameter"; // 
-
+import SensorDataTable from "../Common/SensorDataTable";
+import DynamicLineChart from '../Common/DynamicLineChart';
 import axios from "axios";
 
 import DatePickerComponent from "../Common/DatePickerComponent";
@@ -25,6 +24,7 @@ const PLCdashboard = () => {
   const [currentIstDate, setCurrentIstDate] = useState(new Date());
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  
 
   const now = new Date();
   const formattedDate = now.toLocaleDateString(undefined, {
@@ -143,17 +143,11 @@ const PLCdashboard = () => {
         {error && <p style={{ color: "red" }}>Error: {error}</p>}
         {!loading && !error && (
           <>
-          <PlcPowerChart
-            data={allTableData}
-            selectedParameter={filters.parameter}
-          />
+          <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="plc" />
           </>
           
         )}
-
-        {/* Table */}
-        <PlcDataTable data={allTableData} />
-
+        <SensorDataTable data={{ data: allTableData }} type="plc" />
         {/* Add Device Form */}
         {showAddDeviceForm && (
           <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>

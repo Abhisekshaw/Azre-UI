@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   LineChart,
   Line,
@@ -7,12 +7,13 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer
-} from "recharts";
+} from 'recharts';
 
-const PlcPowerChart = ({ data, selectedParameter }) => {
+const DynamicLineChart = ({ data, selectedParameter, sourceType }) => {
+  console.log({data},"------");
   if (!selectedParameter) {
     return (
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
+      <p style={{ textAlign: 'center', marginTop: '1rem' }}>
         Please select a parameter from the dropdown.
       </p>
     );
@@ -20,38 +21,36 @@ const PlcPowerChart = ({ data, selectedParameter }) => {
 
   if (!data?.data?.length) {
     return (
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
+      <p style={{ textAlign: 'center', marginTop: '1rem' }}>
         No data available to display the chart.
       </p>
     );
   }
 
-  const chartData = data?.data?.map((entry) => {
-      const rawTimestamp = entry?.d_details?.timestamp;
-
-      // Try to parse timestamp in seconds or ISO format
-      const date =
-        typeof rawTimestamp === "number"
-          ? new Date(rawTimestamp * 1000)
-          : new Date(rawTimestamp);
+  const chartData = data.data
+    .map((entry) => {
+      const timestamp = entry?.d_details?.timestamp;
+      const date = typeof timestamp === 'number'
+        ? new Date(timestamp * 1000)
+        : new Date(timestamp);
 
       const time = date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
+        hour: '2-digit',
+        minute: '2-digit'
       });
 
-      const value = entry?.flow_data?.[selectedParameter];
+      const sourceData =
+        sourceType === 'plc' ? entry?.plc_data : entry?.flow_data;
 
-      return {
-        time,
-        [selectedParameter]: value
-      };
+      const value = sourceData?.[selectedParameter];
+
+      return value !== undefined ? { time, [selectedParameter]: value } : null;
     })
-    .filter((entry) => entry[selectedParameter] !== undefined);
+    .filter(Boolean); // Remove null entries
 
   if (!chartData.length) {
     return (
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
+      <p style={{ textAlign: 'center', marginTop: '1rem' }}>
         No valid data found for selected parameter: <strong>{selectedParameter}</strong>
       </p>
     );
@@ -69,7 +68,7 @@ const PlcPowerChart = ({ data, selectedParameter }) => {
           <Line
             type="monotone"
             dataKey={selectedParameter}
-            stroke="#4b0082"
+            stroke={sourceType === 'plc' ? '#4b0082' : '#8884d8'}
             strokeWidth={2}
             dot={{ r: 4 }}
             activeDot={{ r: 6 }}
@@ -80,4 +79,4 @@ const PlcPowerChart = ({ data, selectedParameter }) => {
   );
 };
 
-export default PlcPowerChart;
+export default DynamicLineChart;
