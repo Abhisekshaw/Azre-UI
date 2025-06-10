@@ -10,7 +10,8 @@ import {
 } from 'recharts';
 
 const DynamicLineChart = ({ data, selectedParameter, sourceType }) => {
-  console.log(data,"------");
+  console.log(data.data,"------");
+  console.log(sourceType,"---************---");
   if (!selectedParameter) {
     return (
       <p style={{ textAlign: 'center', marginTop: '1rem' }}>
@@ -27,8 +28,7 @@ const DynamicLineChart = ({ data, selectedParameter, sourceType }) => {
     );
   }
 
-  const chartData = data.data
-    .map((entry) => {
+  const chartData = data.data.map((entry) => {
       const timestamp = entry?.d_details?.timestamp;
       const date = typeof timestamp === 'number'
         ? new Date(timestamp * 1000)
@@ -39,8 +39,7 @@ const DynamicLineChart = ({ data, selectedParameter, sourceType }) => {
         minute: '2-digit'
       });
 
-      const sourceData =
-        sourceType === 'plc' ? entry?.plc_data : entry?.flow_data;
+      const sourceData = sourceType === 'plc' ? entry?.PLC_data : entry?.flow_data;
 
       const value = sourceData?.[selectedParameter];
 

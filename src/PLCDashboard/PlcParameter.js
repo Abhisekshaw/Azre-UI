@@ -18,6 +18,7 @@ const  PlcParameter= ({ filters, onChange }) => {
   };
 
   const handleChange = (e) => {
+    console.log(e,"#############")
     onChange(e);
   };
 
@@ -34,12 +35,12 @@ const  PlcParameter= ({ filters, onChange }) => {
 
       <select name="parameter" value={filters.parameter} onChange={handleChange}>
         <option value="">--Select Parameter--</option>
-        <option value="Pb">D_R</option>
-        <option value="Tb">T_L</option>
-        <option value="VmT">A_F</option>
-        <option value="VbT">F_F</option>
-        <option value="Qb">Y_F_T</option>
-        <option value="BatR">Y_O_C</option>
+        <option value="D_R">D_R</option>
+        <option value="T_L">T_L</option>
+        <option value="A_F">A_F</option>
+        <option value="F_F">F_F</option>
+        <option value="Y_F_T">Y_F_T</option>
+        <option value="Y_O_C">Y_O_C</option>
       </select>
     </div>
   );
