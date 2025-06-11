@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../Common/Sidebar';
 import Filters from '../FlowMeterDashboard/FilterPanel';
-// import PowerChart from '../FlowMeterDashboard/PowerChart';
-// import DataTable from '../FlowMeterDashboard/DataTable';
 import DatePickerComponent from '../Common/DatePickerComponent';
 import FormComponent from '../Common/FormComponent';
 import axios from 'axios';
