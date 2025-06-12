@@ -8,7 +8,7 @@ const SensorDataTable = ({ data, type }) => {
   return (
     <div className="table-container">
       <h3 className="table-title">
-        {isFlow ? "Flowmeter Sensor Data Table" : "PLC Sensor Data Table"}
+        {isFlow ? "Flow Meter Data Table" : "PLC Data Table"}
       </h3>
 
       <table className="data-table">
@@ -17,19 +17,22 @@ const SensorDataTable = ({ data, type }) => {
             <th>Time</th>
             {isFlow ? (
               <>
-                <th>Pb</th>
-                <th>Tb</th>
-                <th>VmT</th>
-                <th>VbT</th>
-                <th>Qb</th>
-                <th>BatR</th>
+                <th>Pressure (bar)</th>
+                <th>Temperature (°C)</th>
+                <th>Uncorrected Flow Totalizer (M3)</th>
+                <th>Corrected Total Flow (SCM)</th>
+                <th>Flow rate (SCMH)</th>
+                <th>Battery Life Remaining (%)</th>
               </>
             ) : (
               <>
-                <th>Temp</th>
-                <th>Voltage</th>
-                <th>Current</th>
-                <th>Status</th>
+                <th>Mode DI (Auto/Emergency)</th>
+                <th>Dozing Rate (25 mg/scm)</th>
+                <th>Tank Level (kg)</th>
+                <th>Actual Flow (SCMH)</th>
+                <th>Fixed Flow (SCMH)</th>
+                <th>Yesterday Flow Total (SCMD)</th>
+                <th>Yesterday Odorant Consumption (mg)</th>
               </>
             )}
           </tr>
@@ -41,7 +44,7 @@ const SensorDataTable = ({ data, type }) => {
               <tr key={i}>
                 <td>
                   {isFlow
-                    ? row?.d_details?.timestamp
+                    ? new Date(row?.d_details?.timestamp * 1000).toLocaleString()
                     : new Date(row?.d_details?.timestamp * 1000).toLocaleString()}
                 </td>
 
@@ -56,10 +59,13 @@ const SensorDataTable = ({ data, type }) => {
                   </>
                 ) : (
                   <>
-                    <td>{row?.plc_data?.temperature ?? "N/A"}</td>
-                    <td>{row?.plc_data?.voltage ?? "N/A"}</td>
-                    <td>{row?.plc_data?.current ?? "N/A"}</td>
-                    <td>{row?.plc_data?.status ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.mode_DI ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.D_R ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.T_L ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.A_F ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.F_F ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.Y_F_T ?? "N/A"}</td>
+                    <td>{row?.PLC_data?.Y_O_C ?? "N/A"}</td>
                   </>
                 )}
               </tr>
