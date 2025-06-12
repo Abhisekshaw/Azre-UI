@@ -132,7 +132,7 @@ const PLCdashboard = () => {
             <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="plc" />
           </>
 
-        )}
+         )}
         <SensorDataTable data={{ data: allTableData }} type="plc" />
         {/* Add Device Form */}
         {showAddDeviceForm && (
