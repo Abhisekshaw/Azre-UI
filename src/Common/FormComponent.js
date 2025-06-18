@@ -133,14 +133,25 @@ const FormComponent = ({ onClose }) => {
           />
 
           <label>Device Type:</label>
-          <input
+          {/* <input
             type="text"
             name="deviceType"
             value={formData.deviceType}
             onChange={handleChange}
             required
             style={inputStyle}
-          />
+          /> */}
+          <select
+            name="deviceType"
+            value={formData.deviceType}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          >
+            <option value="">Select Device Type</option>
+            <option value="plc">PLC</option>
+            <option value="flowmeter">Flowmeter</option>
+          </select>
 
           <label>Location:</label>
           <input
