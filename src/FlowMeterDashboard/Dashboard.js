@@ -70,7 +70,7 @@ const Dashboard = () => {
           {
             start: Math.floor(new Date(dateRange.start).getTime() / 1000),
             end: Math.floor(new Date(dateRange.end).getTime() / 1000),
-            device: filters.device,
+            devices: filters.device,
           }
         );
 

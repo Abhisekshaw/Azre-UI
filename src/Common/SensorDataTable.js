@@ -24,6 +24,7 @@ const SensorDataTable = ({ data, type }) => {
             {isFlow ? (
               <>
                 <th>Pressure (bar)</th>
+                <th>Flowmeter ID</th>
                 <th>Temperature (°C)</th>
                 <th>Uncorrected Flow Totalizer (M3)</th>
                 <th>Corrected Total Flow (SCM)</th>
@@ -33,6 +34,7 @@ const SensorDataTable = ({ data, type }) => {
             ) : (
               <>
                 <th>Mode DI (Auto/Emergency)</th>
+                <th>Plc ID</th>
                 <th>Dozing Rate (25 mg/scm)</th>
                 <th>Tank Level (kg)</th>
                 <th>Actual Flow (SCMH)</th>
@@ -57,6 +59,7 @@ const SensorDataTable = ({ data, type }) => {
                   {isFlow ? (
                     <>
                       <td>{row?.flow_data?.Pb ?? "N/A"}</td>
+                      <td>{row?.d_details?.gatewayID ?? "N/A"}</td>
                       <td>{row?.flow_data?.Tb ?? "N/A"}</td>
                       <td>{row?.flow_data?.VmT ?? "N/A"}</td>
                       <td>{row?.flow_data?.VbT ?? "N/A"}</td>
@@ -66,6 +69,7 @@ const SensorDataTable = ({ data, type }) => {
                   ) : (
                     <>
                       <td>{row?.PLC_data?.mode_DI ?? "N/A"}</td>
+                      <td>{row?.d_details?.gatewayID ?? "N/A"}</td>
                       <td>{row?.PLC_data?.D_R ?? "N/A"}</td>
                       <td>{row?.PLC_data?.T_L ?? "N/A"}</td>
                       <td>{row?.PLC_data?.A_F ?? "N/A"}</td>

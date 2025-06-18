@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { PLC_DASHBOARD } from '../api/api';
 import axios from "axios";
 
 export const fetchPlcData = createAsyncThunk(
   "plc/fetchPlcData",
   async ({ data }, { rejectWithValue }) => {
-    console.log({data},"+++++++++");
     try {
       //  Step 1: Retrieve token from localStorage
       const token = window.localStorage.getItem("token");
@@ -13,11 +13,10 @@ export const fetchPlcData = createAsyncThunk(
       const requestBody = {
         start: Math.floor(new Date(data.start).getTime() / 1000),
         end: Math.floor(new Date(data.end).getTime() / 1000),
-        device: data.device,
+        devices: data.devices,
       };
 
-      const response = await axios.post(
-        "http://65.0.176.7:3030/api/gateway-data/Plc",
+      const response = await PLC_DASHBOARD(
         requestBody,
         {
           headers: {
@@ -25,7 +24,6 @@ export const fetchPlcData = createAsyncThunk(
           },
         }
       );
-      console.log({response});
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || "API Error");

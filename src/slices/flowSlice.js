@@ -3,9 +3,9 @@ import { DASHBOARD } from '../api/api';
 
 export const fetchFlowData = createAsyncThunk(
   'flow/fetchFlowData',
-  async ({ start, end, device }, thunkAPI) => {
+  async ({ start, end, devices }, thunkAPI) => {
     try {
-      if (!start || !end || !device) {
+      if (!start || !end || !devices) {
         return thunkAPI.rejectWithValue("Missing required parameters.");
       }
 
@@ -14,7 +14,7 @@ export const fetchFlowData = createAsyncThunk(
       const response = await DASHBOARD({
         start,
         end,
-        device,
+        devices,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
