@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const FormComponent = ({ onClose, onAdd }) => {
+const FormComponent = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    deviceName: '',
-    parameter: '',
-    location: '',
-    dateOfJoining: '',
-    timeZone: '',
+    deviceName: "",
+    deviceType: "", // updated field name
+    location: "",
+    dateOfJoining: "",
+    timeZone: "",
   });
 
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    document.body.style.pointerEvents = 'none';
+    document.body.style.overflow = "hidden";
+    document.body.style.pointerEvents = "none";
     return () => {
-      document.body.style.overflow = 'auto';
-      document.body.style.pointerEvents = 'auto';
+      document.body.style.overflow = "auto";
+      document.body.style.pointerEvents = "auto";
     };
   }, []);
 
@@ -22,68 +26,100 @@ const FormComponent = ({ onClose, onAdd }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onAdd(formData);
-    onClose();
+
+    const token = localStorage.getItem("authToken"); // assuming token is stored like this
+
+    try {
+      const response = await fetch(
+        "http://65.0.176.7:3030/api/register-device",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // remove if not required
+          },
+          body: JSON.stringify({
+            deviceId: formData.deviceName,
+            devicetype: formData.deviceType,
+            location: formData.location,
+            dateOfJoining: formData.dateOfJoining,
+            timeZone: formData.timeZone,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        navigate("/"); // replace with your actual route
+        onClose();
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Something went wrong. Try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+      console.error("API error:", err);
+    }
   };
 
   const inputStyle = {
-    width: '100%',
-    padding: '8px',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    marginTop: '4px',
-    marginBottom: '12px',
-    fontSize: '14px',
+    width: "100%",
+    padding: "8px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    marginTop: "4px",
+    marginBottom: "12px",
+    fontSize: "14px",
   };
 
-  const timeZones = Intl.supportedValuesOf('timeZone');
+  const timeZones = Intl.supportedValuesOf("timeZone");
 
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         zIndex: 1000,
-        padding: '10px',
-        pointerEvents: 'auto',
+        padding: "10px",
+        pointerEvents: "auto",
       }}
     >
       <div
         style={{
-          backgroundColor: '#fff',
-          padding: '25px',
-          borderRadius: '10px',
-          width: '360px',
-          position: 'relative',
+          backgroundColor: "#fff",
+          padding: "25px",
+          borderRadius: "10px",
+          width: "360px",
+          position: "relative",
         }}
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           style={{
-            position: 'absolute',
-            top: '8px',
-            right: '10px',
-            border: 'none',
-            background: 'transparent',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
+            position: "absolute",
+            top: "8px",
+            right: "10px",
+            border: "none",
+            background: "transparent",
+            fontSize: "18px",
+            fontWeight: "bold",
+            cursor: "pointer",
           }}
         >
           &times;
         </button>
 
-        <h3 style={{ marginBottom: '15px', textAlign: 'center' }}>Add New Device</h3>
+        <h3 style={{ marginBottom: "15px", textAlign: "center" }}>
+          Add New Device
+        </h3>
 
         <form onSubmit={handleSubmit}>
           <label>Device Name:</label>
@@ -96,11 +132,11 @@ const FormComponent = ({ onClose, onAdd }) => {
             style={inputStyle}
           />
 
-          <label>Parameter:</label>
+          <label>Device Type:</label>
           <input
             type="text"
-            name="parameter"
-            value={formData.parameter}
+            name="deviceType"
+            value={formData.deviceType}
             onChange={handleChange}
             required
             style={inputStyle}
@@ -142,18 +178,20 @@ const FormComponent = ({ onClose, onAdd }) => {
             ))}
           </select>
 
+          {error && <p style={{ color: "red", fontSize: "13px" }}>{error}</p>}
+
           <button
             type="submit"
             style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#4b0082',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
-              fontSize: '15px',
-              cursor: 'pointer',
-              marginTop: '10px',
+              width: "100%",
+              padding: "10px",
+              backgroundColor: "#4b0082",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              fontSize: "15px",
+              cursor: "pointer",
+              marginTop: "10px",
             }}
           >
             Add Device

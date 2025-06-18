@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from '../Common/Sidebar';
-import Filters from '../FlowMeterDashboard/FilterPanel';
-import DatePickerComponent from '../Common/DatePickerComponent';
-import FormComponent from '../Common/FormComponent';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import Sidebar from "../Common/Sidebar";
+import Filters from "../FlowMeterDashboard/FilterPanel";
+import DatePickerComponent from "../Common/DatePickerComponent";
+import FormComponent from "../Common/FormComponent";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import SensorDataTable from "../Common/SensorDataTable";
-import DynamicLineChart from '../Common/DynamicLineChart';
+import DynamicLineChart from "../Common/DynamicLineChart";
+import { doLogout } from "../slices/authSlice";
+import { useDispatch } from "react-redux";
+
 const Dashboard = () => {
-  const [filters, setFilters] = useState({ time: '', device: '', parameter: '' });
+  const [filters, setFilters] = useState({
+    time: "",
+    device: "",
+    parameter: "",
+  });
   const [allChartData, setAllChartData] = useState([]);
   const [allTableData, setAllTableData] = useState([]);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
@@ -16,17 +23,20 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState({
-    date: '',
-    time: '',
-    greeting: ''
+    date: "",
+    time: "",
+    greeting: "",
   });
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
-
+  const handleLogout = () => {
+    dispatch(doLogout());
+    navigate("/login");
+  };
   const handleDateChange = (range) => {
     setDateRange(range);
   };
@@ -34,31 +44,41 @@ const Dashboard = () => {
   const now = new Date();
   const hours = now.getHours();
   const minutes = now.getMinutes();
-  const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
-  const formattedDate = now.toLocaleDateString('en-IN', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
+  const formattedTime = `${hours % 12 || 12}:${
+    minutes < 10 ? "0" : ""
+  }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
+  const formattedDate = now.toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
-  const greeting = hours < 12 ? 'Hi, Good Morning' : hours < 17 ? 'Hi, Good Afternoon' : 'Hi, Good Evening';
+  const greeting =
+    hours < 12
+      ? "Hi, Good Morning"
+      : hours < 17
+      ? "Hi, Good Afternoon"
+      : "Hi, Good Evening";
 
   useEffect(() => {
     const fetchGatewayData = async () => {
       if (!dateRange.start || !dateRange.end || !filters.device) return;
       setLoading(true);
       try {
-        const response = await axios.post('http://65.0.176.7:3030/api/gateway-data/Flowmeter', {
-          start: Math.floor(new Date(dateRange.start).getTime() / 1000),
-          end: Math.floor(new Date(dateRange.end).getTime() / 1000),
-          device: filters.device
-        });
+        const response = await axios.post(
+          "http://65.0.176.7:3030/api/gateway-data/Flowmeter",
+          {
+            start: Math.floor(new Date(dateRange.start).getTime() / 1000),
+            end: Math.floor(new Date(dateRange.end).getTime() / 1000),
+            device: filters.device,
+          }
+        );
 
         setAllChartData(response?.data || []);
         setAllTableData(response?.data || []);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch gateway data');
+        setError("Failed to fetch gateway data");
         console.error(err);
       } finally {
         setLoading(false);
@@ -85,7 +105,8 @@ const Dashboard = () => {
               <div className="dropdown-menu">
                 <div>Profile</div>
                 <div>Settings</div>
-                <div
+                {
+                  /* <div
                   onClick={() => {
                     localStorage.removeItem('isAuthenticated');
                     localStorage.removeItem('authToken');
@@ -93,45 +114,47 @@ const Dashboard = () => {
                   }}
                 >
                   Logout
-                </div>
+                </div> */
+                  <div onClick={handleLogout}>Logout</div>
+                }
               </div>
             )}
           </div>
         </div>
 
         {/* Background */}
-        <div style={{ position: 'relative', width: '100%' }}>
+        <div style={{ position: "relative", width: "100%" }}>
           <img
             src="https://media.istockphoto.com/id/476098860/vector/wonderful-morning-in-the-blue-mountains.jpg?s=612x612&w=0&k=20&c=0nuLvsWKXPReu01RvbXTKIwlUYxOQvoXD_qVBrsapxc="
             alt="Background"
             style={{
-              height: '150px',
-              width: '100%',
-              objectFit: 'cover',
-              borderRadius: '15px'
+              height: "150px",
+              width: "100%",
+              objectFit: "cover",
+              borderRadius: "15px",
             }}
           />
           <div
             style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              color: 'black',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              lineHeight: '1.5'
+              position: "absolute",
+              top: "20px",
+              left: "20px",
+              color: "black",
+              fontSize: "16px",
+              fontWeight: "bold",
+              lineHeight: "1.5",
             }}
           >
             {greeting}
           </div>
           <div
             style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              color: 'black',
-              fontSize: '14px',
-              textAlign: 'right'
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              color: "black",
+              fontSize: "14px",
+              textAlign: "right",
             }}
           >
             {formattedDate}
@@ -141,19 +164,21 @@ const Dashboard = () => {
         </div>
 
         {/* Date picker and Add Device */}
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+        <div
+          style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+        >
           <DatePickerComponent onDateChange={handleDateChange} />
           <div style={{ flex: 1 }} />
           <button
             onClick={() => setShowAddDeviceForm(true)}
             style={{
-              padding: '10px 15px',
-              backgroundColor: '#4b0082',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              marginLeft: 'auto'
+              padding: "10px 15px",
+              backgroundColor: "#4b0082",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              marginLeft: "auto",
             }}
           >
             Add Device
@@ -165,47 +190,51 @@ const Dashboard = () => {
 
         {/* Loading and Error Messages */}
         {loading && <p>Loading data...</p>}
-        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+        {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
         {/* Chart */}
-        <DynamicLineChart data={allTableData} selectedParameter={filters.parameter} sourceType="flow" />
-        <SensorDataTable data={{ data: allTableData }} type="flow" />    
+        <DynamicLineChart
+          data={allTableData}
+          selectedParameter={filters.parameter}
+          sourceType="flow"
+        />
+        <SensorDataTable data={{ data: allTableData }} type="flow" />
         {/* Add Device Form */}
         {showAddDeviceForm && (
           <div
             style={{
-              position: 'fixed',
+              position: "fixed",
               top: 0,
               left: 0,
-              width: '100vw',
-              height: '100vh',
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000
+              width: "100vw",
+              height: "100vh",
+              backgroundColor: "rgba(0,0,0,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
             }}
           >
             <div
               style={{
-                background: '#fff',
-                padding: '30px',
-                borderRadius: '10px',
-                position: 'relative',
-                width: '400px',
-                boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+                background: "#fff",
+                padding: "30px",
+                borderRadius: "10px",
+                position: "relative",
+                width: "400px",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
               }}
             >
               <button
                 onClick={() => setShowAddDeviceForm(false)}
                 style={{
-                  position: 'absolute',
-                  top: '10px',
-                  right: '10px',
-                  background: 'transparent',
-                  border: 'none',
-                  fontSize: '20px',
-                  cursor: 'pointer'
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "20px",
+                  cursor: "pointer",
                 }}
               >
                 ✖
