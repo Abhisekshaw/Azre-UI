@@ -15,5 +15,8 @@ export const DASHBOARD = (data) => api.post("/api/gateway-data/Flowmeter", data)
 
 // PLC DASHBOARD API
 export const PLC_DASHBOARD = (data) => api.post("/api/gateway-data/Plc", data);
-
 // http://65.0.176.7:3030/api/gateway-data/Plc
+
+// DEVICE REGISTRATION
+export const DEVICE_REGISTRATION = (data,header) => api.post("/api/register-device", data, header);
+// http://65.0.176.7:3030/api/register-device

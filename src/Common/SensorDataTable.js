@@ -1,7 +1,6 @@
 import React from "react";
 const SensorDataTable = ({ data, type }) => {
   const isFlow = type === "flow";
-
   // Helper to format timestamp into separate date and time
   const getDateAndTime = (timestamp) => {
     const dateObj = new Date(timestamp * 1000);
@@ -33,9 +32,9 @@ const SensorDataTable = ({ data, type }) => {
               </>
             ) : (
               <>
-                <th>Mode DI (Auto/Emergency)</th>
+                <th>Mode (Auto/Emergency)</th>
                 <th>Plc ID</th>
-                <th>Dozing Rate (25 mg/scm)</th>
+                <th>Dozing Rate (mg/scm)</th>
                 <th>Tank Level (kg)</th>
                 <th>Actual Flow (SCMH)</th>
                 <th>Fixed Flow (SCMH)</th>
@@ -47,8 +46,8 @@ const SensorDataTable = ({ data, type }) => {
         </thead>
 
         <tbody>
-          {data?.data?.data?.length > 0 ? (
-            data.data.data.map((row, i) => {
+          {data?.data?.length > 0 ? (
+            data?.data.map((row, i) => {
               const { date, time } = getDateAndTime(row?.d_details?.timestamp);
 
               return (

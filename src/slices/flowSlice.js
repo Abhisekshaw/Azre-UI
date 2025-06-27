@@ -3,33 +3,19 @@ import { DASHBOARD } from '../api/api';
 
 export const fetchFlowData = createAsyncThunk(
   'flow/fetchFlowData',
-  async ({ start, end, devices }, thunkAPI) => {
+  async ({ data }) => {
     try {
-      if (!start || !end || !devices) {
-        return thunkAPI.rejectWithValue("Missing required parameters.");
-      }
-
       const token = window.localStorage.getItem("token");
-
-      const response = await DASHBOARD({
-        start,
-        end,
-        devices,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!Array.isArray(response.data)) {
-        return thunkAPI.rejectWithValue("Invalid data format received");
-      }
-
+      const response = await DASHBOARD(data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error?.response?.data?.message || "Failed to fetch Flowmeter data"
-      );
+      console.log({ error });
     }
   }
 );
@@ -52,7 +38,7 @@ const flowSlice = createSlice({
       .addCase(fetchFlowData.fulfilled, (state, action) => {
         state.loading = false;
         state.chartData = action.payload;
-        state.tableData = action.payload;
+        state.error = null;
       })
       .addCase(fetchFlowData.rejected, (state, action) => {
         state.loading = false;

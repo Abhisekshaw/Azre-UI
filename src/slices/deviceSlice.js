@@ -1,33 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { DEVICE_REGISTRATION } from '../api/api';
 
 export const registerDevice = createAsyncThunk(
   "device/registerDevice",
-  async (deviceData, { rejectWithValue }) => {
+  async ({ data }, { rejectWithValue }) => {
     try {
-      // ✅ Get token from localStorage
-      const token = window.localStorage.getItem("token");
-
-      const response = await axios.post(
-        "http://65.0.176.7:3030/api/register-device",
-        {
-          deviceId: deviceData.deviceName,
-          devicetype: deviceData.parameter,
-          location: deviceData.location,
-          dateOfJoining: deviceData.dateOfJoining,
-          timeZone: deviceData.timeZone,
+      const header = {
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, //  Secure token here
-          },
-        }
+      };
+
+      const response = await DEVICE_REGISTRATION(
+        data, header
       );
+      console.log("registration done", response);
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -38,12 +29,17 @@ const deviceSlice = createSlice({
     loading: false,
     error: null,
     success: false,
+
+    add_gatewaylist_response: "",
+    add_gatewaylist_error: null,
   },
   reducers: {
     resetDeviceState: (state) => {
       state.loading = false;
       state.error = null;
       state.success = false;
+      state.add_gatewaylist_response = "";
+      state.add_gatewaylist_error = null;
     },
   },
   extraReducers: (builder) => {
@@ -53,13 +49,14 @@ const deviceSlice = createSlice({
         state.error = null;
         state.success = false;
       })
-      .addCase(registerDevice.fulfilled, (state) => {
+      .addCase(registerDevice.fulfilled, (state, action) => {
         state.loading = false;
+        state.add_gatewaylist_response = action.payload;
         state.success = true;
       })
       .addCase(registerDevice.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to register device";
+        state.add_gatewaylist_error = action.payload || "Failed to register device";
         state.success = false;
       });
   },

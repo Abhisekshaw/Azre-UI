@@ -48,10 +48,10 @@ const PLCdashboard = () => {
     navigate("/login");
   };
 
-  const hour = currentIstDate.getHours();
+  // const hour = currentIstDate.getHours();
   let greeting = "Good Evening, Welcome to PLC Dashboard";
-  if (hour >= 5 && hour < 12) greeting = "Good Morning,Welcome to PLC Dashboard";
-  else if (hour >= 12 && hour < 17) greeting = "Good Afternoon,Welcome to PLC Dashboard";
+  // if (hour >= 5 && hour < 12) greeting = "Good Morning,Welcome to PLC Dashboard";
+  // else if (hour >= 12 && hour < 17) greeting = "Good Afternoon,Welcome to PLC Dashboard";
 
   useEffect(() => {
     if (dateRange.start && dateRange.end && filters.device) {
@@ -162,7 +162,7 @@ const PLCdashboard = () => {
           />
         )}
 
-        <SensorDataTable data={{ data: plcState.data }} type="plc" />
+        <SensorDataTable data={{ data: plcState.data.data }} type="plc" />
 
         {showAddDeviceForm && (
           <div

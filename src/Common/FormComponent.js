@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { registerDevice, resetDeviceState } from '../slices/deviceSlice'
 const FormComponent = ({ onClose }) => {
   const [formData, setFormData] = useState({
     deviceName: "",
@@ -9,10 +10,10 @@ const FormComponent = ({ onClose }) => {
     dateOfJoining: "",
     timeZone: "",
   });
-
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { add_gatewaylist_error, add_gatewaylist_response } = useSelector((state) => state.registerDevice);
+  // console.log(add_gatewaylist_error.response.data.message, "+++++++++$$$+++++++++++")
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.body.style.pointerEvents = "none";
@@ -26,37 +27,32 @@ const FormComponent = ({ onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+ if (add_gatewaylist_error) {
+      setError(add_gatewaylist_error.response.data.message);
+      setTimeout(() => {
+        setError([]);
+      }, 2000);
+
+      dispatch(resetDeviceState());
+    }
+    if (add_gatewaylist_response.message === "Device registered successfully") {
+      onClose();
+      dispatch(resetDeviceState());
+    }
+  }, [add_gatewaylist_error, add_gatewaylist_response, dispatch, onClose]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("authToken"); // assuming token is stored like this
-
     try {
-      const response = await fetch(
-        "http://65.0.176.7:3030/api/register-device",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // remove if not required
-          },
-          body: JSON.stringify({
-            deviceId: formData.deviceName,
-            devicetype: formData.deviceType,
-            location: formData.location,
-            dateOfJoining: formData.dateOfJoining,
-            timeZone: formData.timeZone,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        navigate("/"); // replace with your actual route
-        onClose();
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Something went wrong. Try again.");
+      const data = {
+        deviceId: formData.deviceName,
+        devicetype: formData.deviceType,
+        location: formData.location,
+        dateOfJoining: formData.dateOfJoining,
+        timeZone: formData.timeZone,
       }
+      dispatch(registerDevice({ data }))
     } catch (err) {
       setError("Network error. Please try again.");
       console.error("API error:", err);

@@ -3,12 +3,12 @@ import Sidebar from "../Common/Sidebar";
 import Filters from "../FlowMeterDashboard/FilterPanel";
 import DatePickerComponent from "../Common/DatePickerComponent";
 import FormComponent from "../Common/FormComponent";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SensorDataTable from "../Common/SensorDataTable";
 import DynamicLineChart from "../Common/DynamicLineChart";
 import { doLogout } from "../slices/authSlice";
-import { useDispatch } from "react-redux";
+import { fetchFlowData } from "../slices/flowSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [filters, setFilters] = useState({
@@ -16,20 +16,13 @@ const Dashboard = () => {
     device: "",
     parameter: "",
   });
-  const [allChartData, setAllChartData] = useState([]);
-  const [allTableData, setAllTableData] = useState([]);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
-  const [currentDateTime, setCurrentDateTime] = useState({
-    date: "",
-    time: "",
-    greeting: "",
-  });
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const flowmeterData = useSelector((state) => state.flow);
+
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -44,9 +37,8 @@ const Dashboard = () => {
   const now = new Date();
   const hours = now.getHours();
   const minutes = now.getMinutes();
-  const formattedTime = `${hours % 12 || 12}:${
-    minutes < 10 ? "0" : ""
-  }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
+  const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" : ""
+    }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
   const formattedDate = now.toLocaleDateString("en-IN", {
     weekday: "long",
     day: "numeric",
@@ -57,31 +49,21 @@ const Dashboard = () => {
     hours < 12
       ? "Hi, Good Morning"
       : hours < 17
-      ? "Hi, Good Afternoon"
-      : "Hi, Good Evening";
+        ? "Hi, Good Afternoon"
+        : "Hi, Good Evening";
 
   useEffect(() => {
     const fetchGatewayData = async () => {
       if (!dateRange.start || !dateRange.end || !filters.device) return;
-      setLoading(true);
       try {
-        const response = await axios.post(
-          "http://65.0.176.7:3030/api/gateway-data/Flowmeter",
-          {
-            start: Math.floor(new Date(dateRange.start).getTime() / 1000),
-            end: Math.floor(new Date(dateRange.end).getTime() / 1000),
-            devices: filters.device,
-          }
-        );
-
-        setAllChartData(response?.data || []);
-        setAllTableData(response?.data || []);
-        setError(null);
+        const data = {
+          start: Math.floor(new Date(dateRange.start).getTime() / 1000),
+          end: Math.floor(new Date(dateRange.end).getTime() / 1000),
+          devices: filters.device,
+        };
+        dispatch(fetchFlowData({ data }))
       } catch (err) {
-        setError("Failed to fetch gateway data");
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -106,15 +88,6 @@ const Dashboard = () => {
                 <div>Profile</div>
                 <div>Settings</div>
                 {
-                  /* <div
-                  onClick={() => {
-                    localStorage.removeItem('isAuthenticated');
-                    localStorage.removeItem('authToken');
-                    window.location.href = '/login';
-                  }}
-                >
-                  Logout
-                </div> */
                   <div onClick={handleLogout}>Logout</div>
                 }
               </div>
@@ -189,16 +162,20 @@ const Dashboard = () => {
         <Filters filters={filters} onChange={handleFilterChange} />
 
         {/* Loading and Error Messages */}
-        {loading && <p>Loading data...</p>}
-        {error && <p style={{ color: "red" }}>Error: {error}</p>}
+        {flowmeterData.loading && <p>Loading data...</p>}
+        {flowmeterData.error && (
+          <p style={{ color: "red" }}>Error: {flowmeterData.error}</p>
+        )}
 
         {/* Chart */}
-        <DynamicLineChart
-          data={allTableData}
-          selectedParameter={filters.parameter}
-          sourceType="flow"
-        />
-        <SensorDataTable data={{ data: allTableData }} type="flow" />
+        {!flowmeterData.loading && !flowmeterData.error && (
+          <DynamicLineChart
+            data={flowmeterData.chartData}
+            selectedParameter={filters.parameter}
+            sourceType="flow"
+          />
+        )}
+        <SensorDataTable data={{ data: flowmeterData.chartData.data }} type="flow" />
         {/* Add Device Form */}
         {showAddDeviceForm && (
           <div

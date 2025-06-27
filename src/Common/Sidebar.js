@@ -9,11 +9,11 @@ const Sidebar = () => {
       <ul>
         <li onClick={() => navigate('/')}>
           <div className="sidebar-icon">📊</div>
-          <div className="sidebar-label">Flow Meter Dashboard</div>
+          <div className="sidebar-label">FMS Dashboard</div>
         </li>
         <li onClick={() => navigate('/PLCdashboard')}>
           <div className="sidebar-icon">📊</div>
-          <div className="sidebar-label">PLC Dashboard</div>
+          <div className="sidebar-label">ODO Web Dashboard</div>
         </li>
       </ul>
     </div>
