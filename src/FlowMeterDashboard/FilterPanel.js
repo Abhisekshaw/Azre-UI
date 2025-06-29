@@ -16,7 +16,7 @@ const Filters = ({ filters, onChange }) => {
   const handleDeviceClick = async () => {
     if (deviceList.length === 0) {
       try {
-        const res = await axios.get('http://65.0.176.7:3030/api/gateway-list/Flowmeter'); 
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/gateway-list/Flowmeter`); 
         
         setDeviceList(res.data.data); 
       } catch (error) {
