@@ -17,7 +17,6 @@ const PLCdashboard = () => {
   });
   const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
-  const [currentIstDate, setCurrentIstDate] = useState(new Date());
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
 

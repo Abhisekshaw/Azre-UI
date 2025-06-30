@@ -1,5 +1,4 @@
 import axios from "axios";
-import { data } from "react-router-dom";
 export const api = axios.create({ baseURL: process.env.REACT_APP_API });
 
 // LOGIN PAGE API

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { PLC_DASHBOARD } from '../api/api';
-import axios from "axios";
 
 export const fetchPlcData = createAsyncThunk(
   "plc/fetchPlcData",
