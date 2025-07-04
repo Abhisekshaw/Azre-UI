@@ -44,7 +44,7 @@ const PLCdashboard = () => {
   }, []);
   const handleLogout = () => {
     dispatch(doLogout());
-    navigate("/login");
+    navigate("/");
   };
 
   // const hour = currentIstDate.getHours();

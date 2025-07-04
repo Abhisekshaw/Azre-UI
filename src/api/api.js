@@ -8,10 +8,10 @@ export const LOGIN = (data) => api.post("/api/auth/login", data);
 export const FORGOTPASS = (data) => api.post("/api/auth/forget-password", data);
 
 // DASHBOARD API
-export const DASHBOARD = (data) => api.post("/api/gateway-data/Flowmeter", data);
+export const DASHBOARD = (data,header) => api.post("/api/gateway-data/Flowmeter", data, header);
 
 // PLC DASHBOARD API
-export const PLC_DASHBOARD = (data) => api.post("/api/gateway-data/Plc", data);
+export const PLC_DASHBOARD = (data,header) => api.post("/api/gateway-data/Plc", data ,header);
 
 // DEVICE REGISTRATION
 export const DEVICE_REGISTRATION = (data,header) => api.post("/api/register-device", data, header);

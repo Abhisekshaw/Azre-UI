@@ -13,12 +13,12 @@ const AppRoutes = () => {
       <Routes>
 
         {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/PLCdashboard" element={<PLCdashboard />} />
         </Route>
 

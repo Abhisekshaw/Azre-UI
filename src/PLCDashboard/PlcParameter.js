@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const  PlcParameter= ({ filters, onChange }) => {
+const PlcParameter = ({ filters, onChange }) => {
   const [deviceList, setDeviceList] = useState([]);
-
+  const token = localStorage.getItem("token");
   // Fetch on dropdown open
   const handleDeviceClick = async () => {
     if (deviceList.length === 0) {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API}/api/gateway-list/Plc`); 
-        
-        setDeviceList(res.data.data); 
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/gateway-list/Plc`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        setDeviceList(res.data.data);
       } catch (error) {
         console.error('Error fetching gateway devices:', error.message);
       }

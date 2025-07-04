@@ -11,12 +11,18 @@ import axios from 'axios';
 
 const Filters = ({ filters, onChange }) => {
   const [deviceList, setDeviceList] = useState([]);
-
+ const token = localStorage.getItem("token");
   // Fetch on dropdown open
   const handleDeviceClick = async () => {
     if (deviceList.length === 0) {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API}/api/gateway-list/Flowmeter`); 
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/gateway-list/Flowmeter`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        ); 
         
         setDeviceList(res.data.data); 
       } catch (error) {

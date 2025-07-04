@@ -12,7 +12,6 @@ const FormComponent = ({ onClose }) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const { add_gatewaylist_error, add_gatewaylist_response } = useSelector((state) => state.registerDevice);
-  // console.log(add_gatewaylist_error.response.data.message, "+++++++++$$$+++++++++++")
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.body.style.pointerEvents = "none";
@@ -27,7 +26,7 @@ const FormComponent = ({ onClose }) => {
   };
 
   useEffect(() => {
- if (add_gatewaylist_error) {
+    if (add_gatewaylist_error) {
       setError(add_gatewaylist_error.response.data.message);
       setTimeout(() => {
         setError([]);

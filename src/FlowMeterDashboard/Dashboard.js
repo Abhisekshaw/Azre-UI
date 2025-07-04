@@ -28,7 +28,7 @@ const Dashboard = () => {
   };
   const handleLogout = () => {
     dispatch(doLogout());
-    navigate("/login");
+    navigate("/");
   };
   const handleDateChange = (range) => {
     setDateRange(range);
@@ -175,7 +175,7 @@ const Dashboard = () => {
             sourceType="flow"
           />
         )}
-        <SensorDataTable data={{ data: flowmeterData.chartData.data }} type="flow" />
+        <SensorDataTable data={{ data: flowmeterData.chartData?.data }} type="flow" />
         {/* Add Device Form */}
         {showAddDeviceForm && (
           <div

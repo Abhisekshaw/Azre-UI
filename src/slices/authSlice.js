@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { LOGIN, FORGOTPASS } from "../api/api";
 
 export const userLogin = createAsyncThunk(
-  "/login",
+  "/",
   async ({ data, navigate }, { rejectWithValue }) => {
     try {
       const response = await LOGIN(data);
@@ -10,7 +10,7 @@ export const userLogin = createAsyncThunk(
         window.localStorage.setItem("token", response.data.token);
         window.localStorage.setItem("role", response.data.role);
         window.localStorage.setItem("loggedIn", true);
-        navigate("/");
+        navigate("/dashboard");
       }
       return response.data;
     } catch (error) {
@@ -28,7 +28,7 @@ export const forgotPassword = createAsyncThunk(
         window.localStorage.setItem("token", response.data.token);
         window.localStorage.setItem("loggedIn", true);
         setTimeout(() => {
-          navigate("/");
+          navigate("/dashboard");
         }, 3000);
       }
       return response.data;

@@ -13,12 +13,14 @@ export const fetchFlowData = createAsyncThunk(
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log(response)
       return response.data;
     } catch (error) {
       console.log({ error });
     }
   }
 );
+
 
 const flowSlice = createSlice({
   name: 'flow',
